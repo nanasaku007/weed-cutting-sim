@@ -1,0 +1,14 @@
+__pycache__/
+.pytest_cache/
+.venv/
+vendor/
+outputs/
+*.egg-info/
+.DS_Store
+.env
+.env.*
+.venv-*/
+*.mp4
+*.npz
+*.pkl
+*.joblib
