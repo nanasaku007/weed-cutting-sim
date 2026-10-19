@@ -11,6 +11,8 @@ import mujoco
 import numpy as np
 from scipy.spatial.transform import Rotation
 
+from scenery import SCENES, PLANTS, camera_settings, decorate
+
 ROOT = Path(__file__).resolve().parent
 PANDA = ROOT / "vendor" / "franka_emika_panda"
 DT = 0.05
@@ -24,6 +26,11 @@ OBS_NAMES = ([f"target_minus_tool_{a}_dm" for a in "xyz"]
              + ["opening_fraction", "target_cut"]
              + [f"joint{i}_rad" for i in range(1, 8)])
 ACTION_NAMES = ["dx_over_8mm", "dy_over_8mm", "dz_over_8mm", "opening_fraction"]
+GEOMETRIES = ("legacy_point_v1", "stem_segment_v1")
+OBS_V2_NAMES = OBS_NAMES + [f"target_direction_{a}" for a in "xyz"] + [
+    f"protected{i}_{endpoint}_minus_tool_{a}_dm"
+    for i in range(2) for endpoint in ("root", "top") for a in "xyz"]
+OBS_SCHEMAS = {"state15_v1": OBS_NAMES, "state30_v2": OBS_V2_NAMES}
 
 
 def vec(value):
@@ -43,7 +50,53 @@ def cutting_intersection(local, before, after, radius=0.003):
                 and abs(z) <= CUT_TOLERANCE)
 
 
-def scene_xml():
+def segment_plane_intersection(start, end):
+    """Intersection with tool-local z=0; parallel/non-crossing stems miss."""
+    delta = end - start
+    if abs(delta[2]) < 1e-10:
+        return None
+    fraction = -start[2] / delta[2]
+    return start + fraction * delta if 0 <= fraction <= 1 else None
+
+
+def segment_cut_intersection(start, end, joint, before, after, radius=0.003):
+    """Finite stem/blade intersection, restricted to the pre-modelled seam.
+
+    We still detach at the fixed weld, not at an arbitrary new mesh location.
+    The plane hit must be within 12 mm along the stem of that seam.
+    """
+    hit = segment_plane_intersection(start, end)
+    if hit is None or np.linalg.norm(hit - joint) > CUT_TOLERANCE:
+        return None
+    return hit if cutting_intersection(hit, before, after, radius) else None
+
+
+def segment_protected_intersection(start, end, angle, radius=0.003):
+    """Clip a full stem segment against a conservative open-blade envelope."""
+    slope = np.sin(max(angle, 0))
+    normals = np.array([[-1, 0, 0], [1, 0, 0], [0, 0, -1],
+                        [0, 0, 1], [0, -1, 0], [-slope, 1, 0]])
+    bounds = np.array([-0.02 + radius, 0.155 + radius, 0.018 + radius,
+                       0.018 + radius, 0.01 + radius, 0.01 + radius])
+    low, high = 0.0, 1.0
+    for normal, bound in zip(normals, bounds):
+        offset = bound - normal @ start
+        rate = normal @ (end - start)
+        if abs(rate) < 1e-12:
+            if offset < 0:
+                return False
+        elif rate > 0:
+            high = min(high, offset / rate)
+        else:
+            low = max(low, offset / rate)
+        if low > high:
+            return False
+    return True
+
+
+def scene_xml(scene="baseline", plant="legacy"):
+    if scene not in SCENES or plant not in PLANTS:
+        raise ValueError("Unknown scene or plant type")
     source = PANDA / "panda_nohand.xml"
     if not source.exists():
         raise FileNotFoundError("Run python fetch_assets.py before running the simulation.")
@@ -69,6 +122,7 @@ def scene_xml():
     for y in [-0.29, 0.29]:
         el(world, "geom", name=f"curb_{y}", type="box", pos=f"0.57 {y} 0.024",
            size="0.19 0.02 0.024", rgba="0.56 0.59 0.57 1")
+    decorate(root, scene)
 
     attachment = root.find(".//body[@name='attachment']")
     tool = el(attachment, "body", name="scissors", pos="0 0 0.035", quat="0 1 0 0")
@@ -99,24 +153,63 @@ def scene_xml():
         anchor = el(world, "body", name=f"root{i}", pos=f"{x} {y} 0.03")
         el(anchor, "geom", name=f"stump{i}", type="capsule", fromto="0 0 0 0 0 0.11",
            size="0.003", rgba="0.27 0.53 0.16 1", contype="0", conaffinity="0")
-        el(anchor, "geom", name=f"marker{i}", type="cylinder", size="0.021 0.002",
-           pos="0 0 0.003", rgba="0.17 0.38 0.19 1", contype="0", conaffinity="0")
+        # World marker stays horizontal even when the root body tilts.
+        el(world, "geom", name=f"marker{i}", type="cylinder", size="0.021 0.002",
+           pos=f"{x} {y} 0.033", rgba="0.17 0.38 0.19 1", contype="0", conaffinity="0")
         upper = el(world, "body", name=f"upper{i}", pos=f"{x} {y} {z}")
         el(upper, "freejoint", name=f"upper_joint{i}")
-        el(upper, "geom", name=f"stem{i}", type="capsule", fromto="0 0 0 0 0 0.14",
-           size="0.003", mass="0.008", rgba="0.28 0.68 0.23 1", contype="0", conaffinity="0")
+        length = 0.20 if plant == "tall" else 0.14
+        el(upper, "geom", name=f"stem{i}", type="capsule", fromto=f"0 0 0 0 0 {length}",
+           # Compile terrain-only contact into body masks and collision BVHs.
+           # The uncut upper is welded above ground; tools never accept bit 4.
+           size="0.003", mass="0.008", rgba="0.28 0.68 0.23 1", contype="4", conaffinity="0",
+           priority="1", solref="0.004 1", solimp="0.99 0.999 0.001", margin="0.001")
         for j, sign in enumerate([-1, 1]):
+            leaf_size = {"legacy": "0.028 0.007 0.009", "slender": "0.045 0.003 0.004",
+                         "broad": "0.036 0.018 0.006", "tall": "0.021 0.005 0.004"}[plant]
             el(upper, "geom", name=f"leaf{i}_{j}", type="ellipsoid",
-               pos=f"{sign * 0.018} 0 {0.07 + j * 0.04}", size="0.028 0.007 0.009",
+               pos=f"{sign * 0.018} 0 {0.07 + j * 0.04}", size=leaf_size,
                euler=f"0 {sign * -0.45} 0", mass="0.001", rgba="0.25 0.60 0.20 1",
                contype="0", conaffinity="0")
+        if plant != "legacy":
+            # Visual-only secondary leaves; same rigid stem collision primitive.
+            for j in range(3):
+                azimuth = j * 2.4 + i * 0.4
+                r = 0.022 if plant == "broad" else 0.014
+                el(upper, "geom", type="ellipsoid", name=f"foliage{i}_{j}",
+                   pos=vec([r * np.cos(azimuth), r * np.sin(azimuth), 0.035 + j * 0.038]),
+                   size=leaf_size, euler=vec([0, -0.5, azimuth]), mass="0",
+                   rgba="0.30 0.51 0.15 1", contype="0", conaffinity="0")
+            if plant == "tall":
+                el(upper, "geom", type="ellipsoid", name=f"seedhead{i}",
+                   pos="0 0 0.19", size="0.009 0.009 0.029", mass="0",
+                   rgba="0.57 0.48 0.22 1", contype="0", conaffinity="0")
         el(equality, "weld", name=f"stem_weld{i}", body1=f"root{i}", body2=f"upper{i}", solref="0.002 1")
     return ET.tostring(root, encoding="unicode")
 
 
 class CuttingEnv:
-    def __init__(self, max_steps=180):
-        self.model = mujoco.MjModel.from_xml_string(scene_xml())
+    def __init__(self, max_steps=180, scene="baseline", plant="legacy", tilt=0,
+                 azimuth=0, geometry="legacy_point_v1", teacher="direct_v1",
+                 observation_schema="state15_v1"):
+        if teacher not in ("direct_v1", "waypoint_v2") or observation_schema not in OBS_SCHEMAS:
+            raise ValueError("Unknown teacher or observation schema")
+        if teacher == "waypoint_v2" and geometry != "stem_segment_v1":
+            raise ValueError("waypoint_v2 requires stem_segment_v1")
+        self.teacher, self.observation_schema = teacher, observation_schema
+        if geometry not in GEOMETRIES:
+            raise ValueError(f"geometry must be one of {GEOMETRIES}")
+        if not np.isfinite(tilt) or not 0 <= tilt <= 20 or not np.isfinite(azimuth):
+            raise ValueError("tilt must be 0..20 degrees and azimuth must be finite")
+        if tilt != 0 and geometry != "stem_segment_v1":
+            raise ValueError("Tilt requires geometry='stem_segment_v1'")
+        self.scene, self.plant = scene, plant
+        self.tilt, self.azimuth, self.geometry = float(tilt), float(azimuth), geometry
+        self.upper_length = 0.20 if plant == "tall" else 0.14
+        self.model = mujoco.MjModel.from_xml_string(scene_xml(scene, plant))
+        if geometry == "stem_segment_v1":
+            # Tilted stems load the weld in rotation: hold the seam firmly before release.
+            self.model.eq_solimp[:, :3] = [0.99, 0.9999, 0.001]
         self.data = mujoco.MjData(self.model)
         self.ik_data = mujoco.MjData(self.model)
         self.max_steps = max_steps
@@ -131,6 +224,7 @@ class CuttingEnv:
         self.jacp = np.zeros((3, self.model.nv))
         self.jacr = np.zeros_like(self.jacp)
         self.renderer = None
+        self.render_size = None
         self.rest_q = np.array([0, -0.4, 0, -2.1, 0, 1.8, -0.785])
 
     def solve_ik(self, pos, start, iterations=18):
@@ -160,6 +254,7 @@ class CuttingEnv:
         mujoco.mj_resetData(self.model, self.data)
         self.seed, self.ood = seed, ood
         self.steps = 0
+        self.expert_status = "reset"
         self.cut = np.zeros(3, dtype=bool)
         self.protected_touched = set()
         self.terrain_contact = False
@@ -167,25 +262,32 @@ class CuttingEnv:
         self.events = []
         self.target_id = int(rng.integers(3))
         self.stems = np.zeros((3, 3))
+        self.roots = np.zeros((3, 3))
+        rotation = Rotation.from_euler("z", self.azimuth, degrees=True) * Rotation.from_euler("y", self.tilt, degrees=True)
+        self.stem_direction = rotation.apply([0., 0., 1.])
+        quat = rotation.as_quat()[[3, 0, 1, 2]]
         for i in range(3):
             x = rng.uniform(0.52, 0.58) + (0.035 if ood else 0)
             y = (i - 1) * 0.10 + rng.uniform(-0.015, 0.015)
             height = rng.uniform(0.13, 0.17) + (0.025 if ood else 0)
             self.stems[i] = [x, y, height]
+            length = (height - 0.03) / self.stem_direction[2]
+            self.roots[i] = self.stems[i] - length * self.stem_direction
             body = self.model.body(f"root{i}")
-            body.pos[:] = [x, y, 0.03]
+            body.pos[:] = self.roots[i]
+            body.quat[:] = quat
             geom = self.model.geom(f"stump{i}")
-            geom.pos[:] = [0, 0, (height - 0.03) / 2]
-            geom.size[1] = (height - 0.03) / 2
+            geom.pos[:] = [0, 0, length / 2]
+            geom.size[1] = length / 2
             q = self.upper_q[i]
-            self.data.qpos[q:q + 7] = [x, y, height, 1, 0, 0, 0]
+            self.data.qpos[q:q + 7] = [x, y, height, *quat]
             self.model.body(f"upper{i}").pos[:] = [x, y, height]
+            self.model.body(f"upper{i}").quat[:] = quat
             eq = self.eq_ids[i]
-            self.model.eq_data[eq, 3:10] = [0, 0, height - 0.03, 1, 0, 0, 0]
+            self.model.eq_data[eq, 3:10] = [0, 0, length, 1, 0, 0, 0]
             self.data.eq_active[eq] = True
-            self.model.geom(f"stem{i}").contype[:] = 0
-            self.model.geom(f"stem{i}").conaffinity[:] = 0
             target = i == self.target_id
+            self.model.geom(f"marker{i}").pos[:] = self.roots[i] + [0, 0, 0.003]
             self.model.geom(f"marker{i}").rgba[:] = [0.95, 0.65, 0.1, 1] if target else [0.2, 0.65, 0.80, 1]
             self.model.geom(f"stem{i}").rgba[:] = [0.55, 0.75, 0.18, 1] if target else [0.14, 0.55, 0.34, 1]
         self.target = self.stems[self.target_id].copy()
@@ -208,11 +310,19 @@ class CuttingEnv:
         return self.data.site_xpos[self.site_id].copy()
 
     def observe(self):
-        return np.r_[(self.target - self.tip) * 10, self.tip,
+        base = np.r_[(self.target - self.tip) * 10, self.tip,
                      self.data.qpos[self.scissor_q] / OPEN_ANGLE,
                      float(self.cut[self.target_id]), self.data.qpos[self.arm_q]].astype(np.float32)
+        if self.observation_schema == "state15_v1":
+            return base
+        segments = [point for i in range(3) if i != self.target_id
+                    for point in (self.roots[i], self.stems[i] + self.upper_length * self.stem_direction)]
+        return np.r_[base, self.stem_direction, ((np.asarray(segments) - self.tip) * 10).ravel()].astype(np.float32)
 
     def expert(self):
+        if self.teacher == "waypoint_v2":
+            from expert import waypoint_action
+            return waypoint_action(self)
         # Expert alone sees the selected target; evaluation BC calls predict(observation).
         if self.cut[self.target_id]:
             goal = self.home
@@ -229,17 +339,30 @@ class CuttingEnv:
         rot = self.data.xmat[self.tool_id].reshape(3, 3)
         for i, stem in enumerate(self.stems):
             local = rot.T @ (stem - pos)
-            if not self.cut[i] and cutting_intersection(local, self.previous_angle, angle):
+            if self.geometry == "stem_segment_v1":
+                start = rot.T @ (self.roots[i] - pos)
+                end = rot.T @ (stem + self.upper_length * self.stem_direction - pos)
+                hit = segment_cut_intersection(start, end, local, self.previous_angle, angle)
+                cutting = hit is not None
+            else:
+                cutting = cutting_intersection(local, self.previous_angle, angle)
+            if not self.cut[i] and cutting:
                 self.cut[i] = True
                 self.data.eq_active[self.eq_ids[i]] = False
-                # Only floor/soil accept bit 4: detached stems can land without
-                # suddenly adding an unmodelled blade/plant cutting-force contact.
-                self.model.geom(f"stem{i}").contype[:] = 4
-                self.events.append({"time_s": float(self.data.time), "plant": i,
-                                    "target": i == self.target_id, "height_error_m": abs(float(local[2]))})
+                event = {"time_s": float(self.data.time), "plant": i,
+                         "target": i == self.target_id, "height_error_m": abs(float(local[2]))}
+                if self.geometry == "stem_segment_v1":
+                    event.update(intersection_xyz=(pos + rot @ hit).tolist(),
+                                 seam_distance_m=float(np.linalg.norm(hit - local)))
+                self.events.append(event)
             # Conservative cutting-envelope intrusion, not a measured force.
-            if i != self.target_id and 0.02 < local[0] < 0.155 and abs(local[2]) < 0.018:
-                if -0.01 < local[1] < local[0] * np.sin(max(angle, 0)) + 0.01:
+            if i != self.target_id:
+                if self.geometry == "stem_segment_v1":
+                    touched = segment_protected_intersection(start, end, angle)
+                else:
+                    touched = (0.02 < local[0] < 0.155 and abs(local[2]) < 0.018
+                               and -0.01 < local[1] < local[0] * np.sin(max(angle, 0)) + 0.01)
+                if touched:
                     self.protected_touched.add(i)
         for c in self.data.contact:
             names = [mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_GEOM, int(g)) or "" for g in [c.geom1, c.geom2]]
@@ -284,14 +407,22 @@ class CuttingEnv:
                 "action_clips": self.action_clips, "events": self.events,
                 "target_xyz": self.target.tolist()}
 
-    def render(self, width=960, height=640, closeup=False):
+    def configuration(self):
+        return {"scene": self.scene, "plant": self.plant, "tilt_degrees": self.tilt,
+                "azimuth_degrees": self.azimuth, "geometry": self.geometry,
+                "background_collision": False, "teacher": self.teacher,
+                "observation_schema": self.observation_schema}
+
+    def render(self, width=960, height=640, closeup=False, camera=None):
+        name = camera or ("closeup" if closeup else "overview")
+        lookat, distance, azimuth, elevation = camera_settings(name, self.target)
+        if self.renderer is not None and self.render_size != (width, height):
+            self.close()
         if self.renderer is None:
             self.renderer = mujoco.Renderer(self.model, height=height, width=width)
+            self.render_size = (width, height)
         cam = mujoco.MjvCamera()
-        cam.lookat[:] = [0.48, 0, 0.23] if closeup else [0.32, 0, 0.35]
-        cam.distance = 0.75 if closeup else 1.45
-        cam.azimuth = 130
-        cam.elevation = -26
+        cam.lookat[:], cam.distance, cam.azimuth, cam.elevation = lookat, distance, azimuth, elevation
         self.renderer.update_scene(self.data, camera=cam)
         return self.renderer.render().copy()
 

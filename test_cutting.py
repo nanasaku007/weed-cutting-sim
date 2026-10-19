@@ -32,6 +32,7 @@ def test_expert_closed_loop_and_reproducible_reset(env):
         _, done, result = env.step(env.expert())
     assert result["success"], result
     assert not env.data.eq_active[env.eq_ids[env.target_id]]
+    assert env.data.body(f"upper{env.target_id}").xpos[2] > 0.02  # detached stem lands
     np.testing.assert_allclose(env.reset(seed=0), initial)
     np.testing.assert_allclose(env.target, target)
     assert env.data.eq_active[env.eq_ids].all()

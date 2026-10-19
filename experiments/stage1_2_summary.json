@@ -1,0 +1,531 @@
+{
+  "python": "3.12.14",
+  "packages": {
+    "mujoco": "3.3.7",
+    "numpy": "2.2.6",
+    "scikit-learn": "1.7.2",
+    "imageio": "2.37.0"
+  },
+  "source_sha256": {
+    "environment.py": "44fcf5bafecc5b1c1b9e819ffa076fa630990c00183d48333bef7a42d5f1a97f",
+    "scenery.py": "9ff21c2e4f3ec20480c7bead734549f7f0f9a1fdafed293682e982e992623a83",
+    "run.py": "c8f8e96bb88adf6836cb3d13a21ab81a7d0f921d94d4f43cb9da974f9c61f662",
+    "preview.py": "1aadd654e65c43785ff474ee6af9a5e2f49d46ef28cc650fe122518696aee210"
+  },
+  "model_commit": "62ab00f2bc44f6f20c1c9b7a13f3fb1dd41a4e35",
+  "control_hz": 20.0,
+  "observations": [
+    "target_minus_tool_x_dm",
+    "target_minus_tool_y_dm",
+    "target_minus_tool_z_dm",
+    "tool_world_x_m",
+    "tool_world_y_m",
+    "tool_world_z_m",
+    "opening_fraction",
+    "target_cut",
+    "joint1_rad",
+    "joint2_rad",
+    "joint3_rad",
+    "joint4_rad",
+    "joint5_rad",
+    "joint6_rad",
+    "joint7_rad"
+  ],
+  "actions": [
+    "dx_over_8mm",
+    "dy_over_8mm",
+    "dz_over_8mm",
+    "opening_fraction"
+  ],
+  "purpose": "development preview; no retraining",
+  "seed_start": 41000,
+  "episodes_per_condition": 30,
+  "preview_seed": 41000,
+  "checkpoint_sha256": "1f99b5f1cf7d0c4813112b5b6993271c6c8cc8da8e698628bdedee9b4cea1355",
+  "background_trajectories_identical": true,
+  "date": "2026-10-18",
+  "commands": [
+    "python preview.py --episodes 30 --no-render --out outputs/stage1_2_evaluation",
+    "python preview.py --out outputs/roadmap_preview"
+  ],
+  "conditions": [
+    {
+      "policy": "bc",
+      "environment": {
+        "scene": "baseline",
+        "plant": "legacy",
+        "tilt_degrees": 0.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "legacy_point_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 27,
+      "outcomes": {
+        "success": 27,
+        "protected_intrusion": 3,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41003,
+        41016,
+        41020
+      ],
+      "episodes_sha256": "ffd8d31cb9f7e10019d8b710acbee4ba0e8ccf424b0a69a504ec8384411565f4"
+    },
+    {
+      "policy": "bc",
+      "environment": {
+        "scene": "curb",
+        "plant": "legacy",
+        "tilt_degrees": 0.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "legacy_point_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 27,
+      "outcomes": {
+        "success": 27,
+        "protected_intrusion": 3,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41003,
+        41016,
+        41020
+      ],
+      "episodes_sha256": "ffd8d31cb9f7e10019d8b710acbee4ba0e8ccf424b0a69a504ec8384411565f4"
+    },
+    {
+      "policy": "bc",
+      "environment": {
+        "scene": "tree",
+        "plant": "legacy",
+        "tilt_degrees": 0.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "legacy_point_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 27,
+      "outcomes": {
+        "success": 27,
+        "protected_intrusion": 3,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41003,
+        41016,
+        41020
+      ],
+      "episodes_sha256": "ffd8d31cb9f7e10019d8b710acbee4ba0e8ccf424b0a69a504ec8384411565f4"
+    },
+    {
+      "policy": "bc",
+      "environment": {
+        "scene": "river",
+        "plant": "legacy",
+        "tilt_degrees": 0.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "legacy_point_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 27,
+      "outcomes": {
+        "success": 27,
+        "protected_intrusion": 3,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41003,
+        41016,
+        41020
+      ],
+      "episodes_sha256": "ffd8d31cb9f7e10019d8b710acbee4ba0e8ccf424b0a69a504ec8384411565f4"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "slender",
+        "tilt_degrees": 0.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 17,
+      "outcomes": {
+        "success": 17,
+        "protected_intrusion": 13,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41025,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "cf400a6cea046a11ed8f6dea95631551f7b65323d72292ae97688e66c4389ade"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "slender",
+        "tilt_degrees": 10.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 17,
+      "outcomes": {
+        "success": 17,
+        "protected_intrusion": 13,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41025,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "5a230ee7b748e49fc1bac5b63a80493e1f5e048eb0c72d43de029cbc8e253eab"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "slender",
+        "tilt_degrees": 20.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 18,
+      "outcomes": {
+        "success": 18,
+        "protected_intrusion": 12,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "b1206251fa7015aca549dc32a69f0608cd28858bcbda6231c9e9de5b064fe462"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "broad",
+        "tilt_degrees": 0.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 17,
+      "outcomes": {
+        "success": 17,
+        "protected_intrusion": 13,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41025,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "23da75f275a6dc8cbf33a45883e9bbb6d0f49671359841f238d9ff59b26532ff"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "broad",
+        "tilt_degrees": 10.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 17,
+      "outcomes": {
+        "success": 17,
+        "protected_intrusion": 13,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41025,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "19cc0f1be8acfc64557a475f69df3b0bf1d7d0380d45ab522fb8960b269c97c4"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "broad",
+        "tilt_degrees": 20.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 18,
+      "outcomes": {
+        "success": 18,
+        "protected_intrusion": 12,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "58bc8be23dba31512fed78ce29fe7bf41585b2937bfaee62e13e28543f2ca5fb"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "tall",
+        "tilt_degrees": 0.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 17,
+      "outcomes": {
+        "success": 17,
+        "protected_intrusion": 13,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41025,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "52aeb3eb01bc11a1575c0f3297de75a02fe0a159b4c56c0ba45c3770498e9ace"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "tall",
+        "tilt_degrees": 10.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 17,
+      "outcomes": {
+        "success": 17,
+        "protected_intrusion": 13,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41025,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "f953d2c87ad89995b27737563617eb53382f54f86337b04ddafa57b403f0df3e"
+    },
+    {
+      "policy": "expert",
+      "environment": {
+        "scene": "tree",
+        "plant": "tall",
+        "tilt_degrees": 20.0,
+        "azimuth_degrees": 0.0,
+        "geometry": "stem_segment_v1",
+        "background_collision": false,
+        "observation_schema": "state15_v1"
+      },
+      "count": 30,
+      "success_count": 18,
+      "outcomes": {
+        "success": 18,
+        "protected_intrusion": 12,
+        "wrong_cut": 0,
+        "terrain_contact": 0,
+        "timeout": 0
+      },
+      "failed_seeds": [
+        41002,
+        41003,
+        41007,
+        41009,
+        41012,
+        41014,
+        41015,
+        41016,
+        41020,
+        41026,
+        41028,
+        41029
+      ],
+      "episodes_sha256": "f33ad0699040d60d5b0c052329f875e336c9963c48247f2e85a2c5c0edaad777"
+    }
+  ],
+  "legacy_regression": {
+    "bc": {
+      "seed_start": 20000,
+      "count": 30,
+      "success_count": 29,
+      "all_episode_records_equal": true
+    },
+    "expert": {
+      "seed_start": 20000,
+      "count": 30,
+      "success_count": 29,
+      "all_episode_records_equal": true
+    }
+  },
+  "preview_videos": {
+    "curb": {
+      "fps": 20.0,
+      "duration_s": 8.05,
+      "size": [
+        640,
+        400
+      ]
+    },
+    "tree": {
+      "fps": 20.0,
+      "duration_s": 8.05,
+      "size": [
+        640,
+        400
+      ]
+    },
+    "river": {
+      "fps": 20.0,
+      "duration_s": 8.05,
+      "size": [
+        640,
+        400
+      ]
+    }
+  }
+}

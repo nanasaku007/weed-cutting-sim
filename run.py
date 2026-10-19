@@ -12,7 +12,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from sklearn.ensemble import ExtraTreesRegressor
 
-from environment import ACTION_NAMES, OBS_NAMES, CuttingEnv, DT, ROOT
+from environment import ACTION_NAMES, OBS_NAMES, OBS_SCHEMAS, GEOMETRIES, CuttingEnv, DT, ROOT
+from scenery import SCENES, PLANTS
 
 
 def save_json(path, value):
@@ -22,7 +23,7 @@ def save_json(path, value):
 
 
 def provenance():
-    files = ["environment.py", "run.py"]
+    files = ["environment.py", "scenery.py", "expert.py", "run.py"]
     return {"python": platform.python_version(), "system": platform.platform(),
             "packages": {p: importlib.metadata.version(p) for p in ["mujoco", "numpy", "scikit-learn", "imageio"]},
             "source_sha256": {p: sha256((ROOT / p).read_bytes()).hexdigest() for p in files},
@@ -30,8 +31,26 @@ def provenance():
             "control_hz": 1 / DT, "observations": OBS_NAMES, "actions": ACTION_NAMES}
 
 
+def environment_options(parser):
+    parser.add_argument("--scene", choices=SCENES, default="baseline")
+    parser.add_argument("--plant", choices=PLANTS, default="legacy")
+    parser.add_argument("--tilt", type=float, default=0, help="Stem tilt in degrees (0..20)")
+    parser.add_argument("--azimuth", type=float, default=0, help="Stem tilt direction in degrees")
+    parser.add_argument("--geometry", choices=GEOMETRIES, default="legacy_point_v1")
+    parser.add_argument("--teacher", choices=("direct_v1", "waypoint_v2"), default="direct_v1")
+    parser.add_argument("--observation-schema", choices=OBS_SCHEMAS, default="state15_v1")
+
+
+def make_env(args, **kwargs):
+    return CuttingEnv(scene=args.scene, plant=args.plant, tilt=args.tilt,
+                      azimuth=args.azimuth, geometry=args.geometry, teacher=args.teacher,
+                      observation_schema=args.observation_schema, **kwargs)
+
+
 def collect(args):
-    env = CuttingEnv()
+    env = make_env(args)
+    if env.teacher == "waypoint_v2" and env.observation_schema != "state30_v2":
+        raise ValueError("Collect waypoint_v2 with --observation-schema state30_v2")
     obs, acts, next_obs, ids, seeds, rows = [], [], [], [], [], []
     for episode in range(args.episodes):
         seed = args.seed + episode
@@ -56,8 +75,10 @@ def collect(args):
     if not obs:
         raise RuntimeError("Expert produced zero successful trajectories. Inspect environment before training.")
     np.savez_compressed(path, observation=np.asarray(obs), action=np.asarray(acts),
-                        next_observation=np.asarray(next_obs), episode_id=np.asarray(ids), seed=np.asarray(seeds))
-    save_json(path.with_suffix(".json"), {**provenance(), "requested_episodes": args.episodes,
+                        next_observation=np.asarray(next_obs), episode_id=np.asarray(ids), seed=np.asarray(seeds),
+                        observation_schema=env.observation_schema)
+    save_json(path.with_suffix(".json"), {**provenance(), "environment": env.configuration(), "requested_episodes": args.episodes,
+              "observations": OBS_SCHEMAS[env.observation_schema],
               "success_count": sum(r["success"] for r in rows), "frames": len(obs),
               "dataset_sha256": sha256(path.read_bytes()).hexdigest(), "episodes": rows})
     env.close()
@@ -75,8 +96,12 @@ class TreeBC:
             self.left = z["left"]; self.right = z["right"]
             self.feature = z["feature"]; self.threshold = z["threshold"]
             self.values = z["values"]; self.starts = z["starts"]
+            self.observation_schema = str(z["observation_schema"]) if "observation_schema" in z else "state15_v1"
+            self.observation_size = len(OBS_SCHEMAS[self.observation_schema])
 
     def predict(self, obs):
+        if np.asarray(obs).shape != (self.observation_size,) or not np.isfinite(obs).all():
+            raise ValueError(f"Checkpoint requires {self.observation_schema} ({self.observation_size} finite values)")
         nodes = self.starts.copy()
         active = self.left[nodes] >= 0
         while np.any(active):
@@ -90,12 +115,18 @@ class TreeBC:
 def train(args):
     with np.load(args.data, allow_pickle=False) as z:
         x, y, episodes = z["observation"], z["action"], z["episode_id"]
+        schema = str(z["observation_schema"]) if "observation_schema" in z else "state15_v1"
+        if schema not in OBS_SCHEMAS or x.shape[1] != len(OBS_SCHEMAS[schema]):
+            raise ValueError("Dataset observation schema/shape mismatch")
+        prescribed_val = z["validation_episode_ids"].copy() if "validation_episode_ids" in z else None
     unique = np.unique(episodes)
     if len(unique) < 5:
         raise ValueError("Need at least 5 successful episodes for episode-disjoint validation.")
     rng = np.random.default_rng(args.seed)
     rng.shuffle(unique)
-    val_ids = unique[:max(1, len(unique) // 5)]
+    val_ids = prescribed_val if prescribed_val is not None else unique[:max(1, len(unique) // 5)]
+    if not len(val_ids) or not np.isin(val_ids, unique).all() or len(np.unique(val_ids)) >= len(unique):
+        raise ValueError("Invalid dataset validation split")
     val = np.isin(episodes, val_ids)
     # ExtraTrees is a small CPU-only BC baseline, selected for fast Mac training.
     model = ExtraTreesRegressor(n_estimators=48, max_depth=22, min_samples_leaf=2,
@@ -116,13 +147,14 @@ def train(args):
     out.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out, left=np.concatenate(left), right=np.concatenate(right),
                         feature=np.concatenate(feature), threshold=np.concatenate(threshold),
-                        values=np.concatenate(values), starts=np.asarray(starts))
+                        values=np.concatenate(values), starts=np.asarray(starts), observation_schema=schema)
     # Verify numeric checkpoint inference agrees with fitted sklearn model.
     loaded = TreeBC(out)
     check_x = x[val][::max(1, int(val.sum()) // 20)]
     np.testing.assert_allclose(np.asarray([loaded.predict(o) for o in check_x]), model.predict(check_x), atol=1e-7)
     info = {**provenance(), "algorithm": "ExtraTrees behavior cloning (from scratch)",
-            "train_episode_ids": unique[len(val_ids):].tolist(), "validation_episode_ids": val_ids.tolist(),
+            "observation_schema": schema, "observations": OBS_SCHEMAS[schema],
+            "train_episode_ids": unique[~np.isin(unique, val_ids)].tolist(), "validation_episode_ids": val_ids.tolist(),
             "train_frames": int((~val).sum()), "validation_frames": int(val.sum()),
             "validation_action_mse": mse.tolist(), "seed": args.seed,
             "elapsed_seconds": time.monotonic() - started,
@@ -133,7 +165,7 @@ def train(args):
 
 
 def evaluate(args):
-    env = CuttingEnv()
+    env = make_env(args)
     policy = TreeBC(args.checkpoint) if args.policy == "bc" else None
     rows = []
     for i in range(args.episodes):
@@ -151,7 +183,7 @@ def evaluate(args):
             save_json(Path(args.logs) / f"seed_{args.seed+i}.json", {"result": result, "trajectory": trajectory})
         print(f"{args.policy} seed={args.seed+i} success={result['success']} cut={result['target_cut']} steps={result['steps']}", flush=True)
     count = len(rows)
-    report = {**provenance(), "policy": args.policy, "ood": args.ood, "episodes": rows,
+    report = {**provenance(), "environment": env.configuration(), "observations": OBS_SCHEMAS[env.observation_schema], "policy": args.policy, "ood": args.ood, "episodes": rows,
               "count": count, "success_count": sum(r["success"] for r in rows),
               "success_rate": sum(r["success"] for r in rows) / count,
               "cut_rate": sum(r["target_cut"] for r in rows) / count,
@@ -179,7 +211,7 @@ def overlay(frame, title, lines):
 
 
 def video(args):
-    env = CuttingEnv()
+    env = make_env(args)
     policy = TreeBC(args.checkpoint) if args.policy == "bc" else None
     path = Path(args.out)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -211,7 +243,8 @@ def video(args):
                          "Simulated cutting skill. Plant fracture forces and real-world transfer are not validated."]))
             results.append(result)
             print(f"video seed={args.seed+i}: {result['success']}", flush=True)
-    save_json(path.with_suffix(".json"), {**provenance(), "policy": args.policy, "results": results})
+    save_json(path.with_suffix(".json"), {**provenance(), "environment": env.configuration(),
+              "observations": OBS_SCHEMAS[env.observation_schema], "policy": args.policy, "results": results})
     env.close()
 
 
@@ -219,6 +252,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     c = sub.add_parser("collect")
+    environment_options(c)
     c.add_argument("--episodes", type=int, default=200)
     c.add_argument("--seed", type=int, default=0)
     c.add_argument("--out", default="outputs/demos.npz")
@@ -228,6 +262,7 @@ def main():
     t.add_argument("--seed", type=int, default=42)
     for name in ["evaluate", "video"]:
         p = sub.add_parser(name)
+        environment_options(p)
         p.add_argument("--policy", choices=["expert", "bc"], default="expert")
         p.add_argument("--checkpoint", default="outputs/bc.npz")
         p.add_argument("--episodes", type=int, default=30 if name == "evaluate" else 3)

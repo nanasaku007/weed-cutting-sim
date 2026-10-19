@@ -1,0 +1,3051 @@
+{
+  "date": "2026-10-18",
+  "scope": "stage 3 teacher, state30 schema and demonstrations; no BC retraining",
+  "evaluation": {
+    "iid": {
+      "python": "3.12.14",
+      "packages": {
+        "mujoco": "3.3.7",
+        "numpy": "2.2.6",
+        "scikit-learn": "1.7.2",
+        "imageio": "2.37.0"
+      },
+      "source_sha256": {
+        "environment.py": "11d4e85047c9a78f3a88037c7b2886337edc8c2fc65f1acd447509f2b0bcd42a",
+        "scenery.py": "9ff21c2e4f3ec20480c7bead734549f7f0f9a1fdafed293682e982e992623a83",
+        "expert.py": "bb150c87d4345c03c19e7d5e7f175b55e20cd83a9075ad608f287a7e56180d03",
+        "run.py": "80709a6123a3ae2464b0be8100d0892758d802828efe9b2838cc37560967cc4f",
+        "stage3.py": "6795978bef42ea0e52735aa862b52f2e98fe64b9b2b1a02150853a9f41b20724"
+      },
+      "model_commit": "62ab00f2bc44f6f20c1c9b7a13f3fb1dd41a4e35",
+      "control_hz": 20.0,
+      "observations": [
+        "target_minus_tool_x_dm",
+        "target_minus_tool_y_dm",
+        "target_minus_tool_z_dm",
+        "tool_world_x_m",
+        "tool_world_y_m",
+        "tool_world_z_m",
+        "opening_fraction",
+        "target_cut",
+        "joint1_rad",
+        "joint2_rad",
+        "joint3_rad",
+        "joint4_rad",
+        "joint5_rad",
+        "joint6_rad",
+        "joint7_rad",
+        "target_direction_x",
+        "target_direction_y",
+        "target_direction_z",
+        "protected0_root_minus_tool_x_dm",
+        "protected0_root_minus_tool_y_dm",
+        "protected0_root_minus_tool_z_dm",
+        "protected0_top_minus_tool_x_dm",
+        "protected0_top_minus_tool_y_dm",
+        "protected0_top_minus_tool_z_dm",
+        "protected1_root_minus_tool_x_dm",
+        "protected1_root_minus_tool_y_dm",
+        "protected1_root_minus_tool_z_dm",
+        "protected1_top_minus_tool_x_dm",
+        "protected1_top_minus_tool_y_dm",
+        "protected1_top_minus_tool_z_dm"
+      ],
+      "actions": [
+        "dx_over_8mm",
+        "dy_over_8mm",
+        "dz_over_8mm",
+        "opening_fraction"
+      ],
+      "observation_schema": "state30_v2",
+      "seed_start": 51000,
+      "count_per_condition": 30,
+      "recovery": false,
+      "ood": false,
+      "conditions": [
+        {
+          "plant": "slender",
+          "tilt": 0,
+          "teacher": "direct_v1",
+          "success_count": 15,
+          "outcomes": {
+            "success": 15,
+            "protected_intrusion": 15
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            }
+          ]
+        },
+        {
+          "plant": "slender",
+          "tilt": 0,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "slender",
+          "tilt": 10,
+          "teacher": "direct_v1",
+          "success_count": 13,
+          "outcomes": {
+            "success": 13,
+            "protected_intrusion": 17
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51019,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51027,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            }
+          ]
+        },
+        {
+          "plant": "slender",
+          "tilt": 10,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "slender",
+          "tilt": 20,
+          "teacher": "direct_v1",
+          "success_count": 10,
+          "outcomes": {
+            "success": 10,
+            "protected_intrusion": 20
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51017,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51019,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51025,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51027,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51029,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "slender",
+          "tilt": 20,
+          "teacher": "waypoint_v2",
+          "success_count": 28,
+          "outcomes": {
+            "success": 28,
+            "timeout": 2
+          },
+          "failed_episodes": [
+            {
+              "seed": 51017,
+              "outcome": "timeout",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51029,
+              "outcome": "timeout",
+              "target_cut": false,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "broad",
+          "tilt": 0,
+          "teacher": "direct_v1",
+          "success_count": 15,
+          "outcomes": {
+            "success": 15,
+            "protected_intrusion": 15
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            }
+          ]
+        },
+        {
+          "plant": "broad",
+          "tilt": 0,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "broad",
+          "tilt": 10,
+          "teacher": "direct_v1",
+          "success_count": 13,
+          "outcomes": {
+            "success": 13,
+            "protected_intrusion": 17
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51019,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51027,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            }
+          ]
+        },
+        {
+          "plant": "broad",
+          "tilt": 10,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "broad",
+          "tilt": 20,
+          "teacher": "direct_v1",
+          "success_count": 10,
+          "outcomes": {
+            "success": 10,
+            "protected_intrusion": 20
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51017,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51019,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51025,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51027,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51029,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "broad",
+          "tilt": 20,
+          "teacher": "waypoint_v2",
+          "success_count": 28,
+          "outcomes": {
+            "success": 28,
+            "timeout": 2
+          },
+          "failed_episodes": [
+            {
+              "seed": 51017,
+              "outcome": "timeout",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51029,
+              "outcome": "timeout",
+              "target_cut": false,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "tall",
+          "tilt": 0,
+          "teacher": "direct_v1",
+          "success_count": 15,
+          "outcomes": {
+            "success": 15,
+            "protected_intrusion": 15
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            }
+          ]
+        },
+        {
+          "plant": "tall",
+          "tilt": 0,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "tall",
+          "tilt": 10,
+          "teacher": "direct_v1",
+          "success_count": 13,
+          "outcomes": {
+            "success": 13,
+            "protected_intrusion": 17
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51019,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51027,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            }
+          ]
+        },
+        {
+          "plant": "tall",
+          "tilt": 10,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "tall",
+          "tilt": 20,
+          "teacher": "direct_v1",
+          "success_count": 10,
+          "outcomes": {
+            "success": 10,
+            "protected_intrusion": 20
+          },
+          "failed_episodes": [
+            {
+              "seed": 51006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51007,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51008,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51010,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51011,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51014,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51015,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51017,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51019,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51020,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51023,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51024,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51025,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51026,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 51027,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 51028,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 51029,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "tall",
+          "tilt": 20,
+          "teacher": "waypoint_v2",
+          "success_count": 28,
+          "outcomes": {
+            "success": 28,
+            "timeout": 2
+          },
+          "failed_episodes": [
+            {
+              "seed": 51017,
+              "outcome": "timeout",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 51029,
+              "outcome": "timeout",
+              "target_cut": false,
+              "azimuth": 90.0
+            }
+          ]
+        }
+      ],
+      "totals": {
+        "direct_v1": {
+          "count": 270,
+          "outcomes": {
+            "success": 114,
+            "protected_intrusion": 156
+          }
+        },
+        "waypoint_v2": {
+          "count": 270,
+          "outcomes": {
+            "success": 264,
+            "timeout": 6
+          }
+        }
+      }
+    },
+    "recovery": {
+      "python": "3.12.14",
+      "packages": {
+        "mujoco": "3.3.7",
+        "numpy": "2.2.6",
+        "scikit-learn": "1.7.2",
+        "imageio": "2.37.0"
+      },
+      "source_sha256": {
+        "environment.py": "11d4e85047c9a78f3a88037c7b2886337edc8c2fc65f1acd447509f2b0bcd42a",
+        "scenery.py": "9ff21c2e4f3ec20480c7bead734549f7f0f9a1fdafed293682e982e992623a83",
+        "expert.py": "bb150c87d4345c03c19e7d5e7f175b55e20cd83a9075ad608f287a7e56180d03",
+        "run.py": "80709a6123a3ae2464b0be8100d0892758d802828efe9b2838cc37560967cc4f",
+        "stage3.py": "6795978bef42ea0e52735aa862b52f2e98fe64b9b2b1a02150853a9f41b20724"
+      },
+      "model_commit": "62ab00f2bc44f6f20c1c9b7a13f3fb1dd41a4e35",
+      "control_hz": 20.0,
+      "observations": [
+        "target_minus_tool_x_dm",
+        "target_minus_tool_y_dm",
+        "target_minus_tool_z_dm",
+        "tool_world_x_m",
+        "tool_world_y_m",
+        "tool_world_z_m",
+        "opening_fraction",
+        "target_cut",
+        "joint1_rad",
+        "joint2_rad",
+        "joint3_rad",
+        "joint4_rad",
+        "joint5_rad",
+        "joint6_rad",
+        "joint7_rad",
+        "target_direction_x",
+        "target_direction_y",
+        "target_direction_z",
+        "protected0_root_minus_tool_x_dm",
+        "protected0_root_minus_tool_y_dm",
+        "protected0_root_minus_tool_z_dm",
+        "protected0_top_minus_tool_x_dm",
+        "protected0_top_minus_tool_y_dm",
+        "protected0_top_minus_tool_z_dm",
+        "protected1_root_minus_tool_x_dm",
+        "protected1_root_minus_tool_y_dm",
+        "protected1_root_minus_tool_z_dm",
+        "protected1_top_minus_tool_x_dm",
+        "protected1_top_minus_tool_y_dm",
+        "protected1_top_minus_tool_z_dm"
+      ],
+      "actions": [
+        "dx_over_8mm",
+        "dy_over_8mm",
+        "dz_over_8mm",
+        "opening_fraction"
+      ],
+      "observation_schema": "state30_v2",
+      "seed_start": 52000,
+      "count_per_condition": 30,
+      "recovery": true,
+      "ood": false,
+      "conditions": [
+        {
+          "plant": "slender",
+          "tilt": 0,
+          "teacher": "direct_v1",
+          "success_count": 15,
+          "outcomes": {
+            "success": 15,
+            "protected_intrusion": 15
+          },
+          "failed_episodes": [
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52012,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "slender",
+          "tilt": 0,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "slender",
+          "tilt": 10,
+          "teacher": "direct_v1",
+          "success_count": 12,
+          "outcomes": {
+            "protected_intrusion": 18,
+            "success": 12
+          },
+          "failed_episodes": [
+            {
+              "seed": 52000,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52005,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52007,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52027,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "slender",
+          "tilt": 10,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "slender",
+          "tilt": 20,
+          "teacher": "direct_v1",
+          "success_count": 8,
+          "outcomes": {
+            "protected_intrusion": 22,
+            "success": 8
+          },
+          "failed_episodes": [
+            {
+              "seed": 52000,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52003,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52005,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52007,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52011,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52027,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "slender",
+          "tilt": 20,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "broad",
+          "tilt": 0,
+          "teacher": "direct_v1",
+          "success_count": 15,
+          "outcomes": {
+            "success": 15,
+            "protected_intrusion": 15
+          },
+          "failed_episodes": [
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52012,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "broad",
+          "tilt": 0,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "broad",
+          "tilt": 10,
+          "teacher": "direct_v1",
+          "success_count": 12,
+          "outcomes": {
+            "protected_intrusion": 18,
+            "success": 12
+          },
+          "failed_episodes": [
+            {
+              "seed": 52000,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52005,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52007,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52027,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "broad",
+          "tilt": 10,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "broad",
+          "tilt": 20,
+          "teacher": "direct_v1",
+          "success_count": 8,
+          "outcomes": {
+            "protected_intrusion": 22,
+            "success": 8
+          },
+          "failed_episodes": [
+            {
+              "seed": 52000,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52003,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52005,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52007,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52011,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52027,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "broad",
+          "tilt": 20,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "tall",
+          "tilt": 0,
+          "teacher": "direct_v1",
+          "success_count": 15,
+          "outcomes": {
+            "success": 15,
+            "protected_intrusion": 15
+          },
+          "failed_episodes": [
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52012,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "tall",
+          "tilt": 0,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "tall",
+          "tilt": 10,
+          "teacher": "direct_v1",
+          "success_count": 12,
+          "outcomes": {
+            "protected_intrusion": 18,
+            "success": 12
+          },
+          "failed_episodes": [
+            {
+              "seed": 52000,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52005,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52007,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52027,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "tall",
+          "tilt": 10,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        },
+        {
+          "plant": "tall",
+          "tilt": 20,
+          "teacher": "direct_v1",
+          "success_count": 8,
+          "outcomes": {
+            "protected_intrusion": 22,
+            "success": 8
+          },
+          "failed_episodes": [
+            {
+              "seed": 52000,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52001,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52003,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52004,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52005,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52006,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52007,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52009,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52010,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52011,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52012,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52013,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52014,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52016,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 0.0
+            },
+            {
+              "seed": 52019,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52021,
+              "outcome": "protected_intrusion",
+              "target_cut": false,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52022,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52023,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52025,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            },
+            {
+              "seed": 52026,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 180.0
+            },
+            {
+              "seed": 52027,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 270.0
+            },
+            {
+              "seed": 52029,
+              "outcome": "protected_intrusion",
+              "target_cut": true,
+              "azimuth": 90.0
+            }
+          ]
+        },
+        {
+          "plant": "tall",
+          "tilt": 20,
+          "teacher": "waypoint_v2",
+          "success_count": 30,
+          "outcomes": {
+            "success": 30
+          },
+          "failed_episodes": []
+        }
+      ],
+      "totals": {
+        "direct_v1": {
+          "count": 270,
+          "outcomes": {
+            "success": 105,
+            "protected_intrusion": 165
+          }
+        },
+        "waypoint_v2": {
+          "count": 270,
+          "outcomes": {
+            "success": 270
+          }
+        }
+      }
+    }
+  },
+  "dataset": {
+    "python": "3.12.14",
+    "packages": {
+      "mujoco": "3.3.7",
+      "numpy": "2.2.6",
+      "scikit-learn": "1.7.2",
+      "imageio": "2.37.0"
+    },
+    "source_sha256": {
+      "environment.py": "11d4e85047c9a78f3a88037c7b2886337edc8c2fc65f1acd447509f2b0bcd42a",
+      "scenery.py": "9ff21c2e4f3ec20480c7bead734549f7f0f9a1fdafed293682e982e992623a83",
+      "expert.py": "bb150c87d4345c03c19e7d5e7f175b55e20cd83a9075ad608f287a7e56180d03",
+      "run.py": "80709a6123a3ae2464b0be8100d0892758d802828efe9b2838cc37560967cc4f",
+      "stage3.py": "6795978bef42ea0e52735aa862b52f2e98fe64b9b2b1a02150853a9f41b20724"
+    },
+    "model_commit": "62ab00f2bc44f6f20c1c9b7a13f3fb1dd41a4e35",
+    "control_hz": 20.0,
+    "observations": [
+      "target_minus_tool_x_dm",
+      "target_minus_tool_y_dm",
+      "target_minus_tool_z_dm",
+      "tool_world_x_m",
+      "tool_world_y_m",
+      "tool_world_z_m",
+      "opening_fraction",
+      "target_cut",
+      "joint1_rad",
+      "joint2_rad",
+      "joint3_rad",
+      "joint4_rad",
+      "joint5_rad",
+      "joint6_rad",
+      "joint7_rad",
+      "target_direction_x",
+      "target_direction_y",
+      "target_direction_z",
+      "protected0_root_minus_tool_x_dm",
+      "protected0_root_minus_tool_y_dm",
+      "protected0_root_minus_tool_z_dm",
+      "protected0_top_minus_tool_x_dm",
+      "protected0_top_minus_tool_y_dm",
+      "protected0_top_minus_tool_z_dm",
+      "protected1_root_minus_tool_x_dm",
+      "protected1_root_minus_tool_y_dm",
+      "protected1_root_minus_tool_z_dm",
+      "protected1_top_minus_tool_x_dm",
+      "protected1_top_minus_tool_y_dm",
+      "protected1_top_minus_tool_z_dm"
+    ],
+    "actions": [
+      "dx_over_8mm",
+      "dy_over_8mm",
+      "dz_over_8mm",
+      "opening_fraction"
+    ],
+    "observation_schema": "state30_v2",
+    "dataset_version": "waypoint_state30_v1",
+    "seed_start": 60000,
+    "attempt_count": 450,
+    "success_count": 445,
+    "frames": 53824,
+    "validation_episode_ids": [
+      0,
+      4,
+      9,
+      14,
+      19,
+      25,
+      29,
+      34,
+      39,
+      44,
+      50,
+      54,
+      59,
+      64,
+      69,
+      75,
+      79,
+      84,
+      89,
+      94,
+      100,
+      104,
+      109,
+      114,
+      119,
+      125,
+      129,
+      134,
+      139,
+      144,
+      150,
+      154,
+      159,
+      164,
+      169,
+      175,
+      179,
+      184,
+      189,
+      194,
+      200,
+      204,
+      209,
+      214,
+      219,
+      225,
+      229,
+      234,
+      239,
+      244,
+      250,
+      254,
+      259,
+      264,
+      269,
+      275,
+      279,
+      284,
+      289,
+      294,
+      300,
+      304,
+      309,
+      314,
+      319,
+      325,
+      329,
+      334,
+      339,
+      344,
+      350,
+      354,
+      359,
+      364,
+      369,
+      375,
+      379,
+      384,
+      389,
+      394,
+      400,
+      404,
+      409,
+      414,
+      419,
+      425,
+      429,
+      439,
+      444
+    ],
+    "dataset_sha256": "64f6835f89d611cfb9bb18fa538e963f3e271b79c9deeac76c4c97a3afc32d12",
+    "split_rule": "per condition: i%25 in (0,4,9,14,19) validation; otherwise train; no repeated seeds",
+    "failed_attempts": [
+      {
+        "seed": 60135,
+        "ood": false,
+        "target_id": 2,
+        "success": false,
+        "target_cut": true,
+        "wrong_cuts": 0,
+        "protected_intrusions": 1,
+        "tool_terrain_contact": false,
+        "returned": false,
+        "steps": 35,
+        "sim_seconds": 1.75,
+        "action_clips": 0,
+        "events": [
+          {
+            "time_s": 0.8060000000000006,
+            "plant": 2,
+            "target": true,
+            "height_error_m": 0.00025458757382313606,
+            "intersection_xyz": [
+              0.5204630703549034,
+              0.10052717736992677,
+              0.1313067826422536
+            ],
+            "seam_distance_m": 0.0002709266419905428
+          }
+        ],
+        "target_xyz": [
+          0.5204630703549036,
+          0.10043451500100242,
+          0.1315613704085064
+        ],
+        "outcome": "protected_intrusion",
+        "phases": {
+          "approach": 15,
+          "close": 2,
+          "return": 16,
+          "retreat": 2
+        },
+        "recovery": true,
+        "reopened_before_cut": true,
+        "environment": {
+          "scene": "baseline",
+          "plant": "slender",
+          "tilt_degrees": 20.0,
+          "azimuth_degrees": 270.0,
+          "geometry": "stem_segment_v1",
+          "background_collision": false,
+          "teacher": "waypoint_v2",
+          "observation_schema": "state30_v2"
+        },
+        "episode_id": 135,
+        "condition_id": 2,
+        "split": "train"
+      },
+      {
+        "seed": 60222,
+        "ood": false,
+        "target_id": 2,
+        "success": false,
+        "target_cut": true,
+        "wrong_cuts": 0,
+        "protected_intrusions": 0,
+        "tool_terrain_contact": false,
+        "returned": false,
+        "steps": 180,
+        "sim_seconds": 9.0,
+        "action_clips": 0,
+        "events": [
+          {
+            "time_s": 4.155999999999764,
+            "plant": 2,
+            "target": true,
+            "height_error_m": 0.0016811531691453335,
+            "intersection_xyz": [
+              0.5666979928358908,
+              0.10302575581977873,
+              0.1326641648533323
+            ],
+            "seam_distance_m": 0.001707114812574483
+          }
+        ],
+        "target_xyz": [
+          0.5669944302121628,
+          0.10302575581977873,
+          0.13098298495062696
+        ],
+        "outcome": "timeout",
+        "phases": {
+          "detour": 9,
+          "approach": 73,
+          "close": 2,
+          "retreat": 27,
+          "return": 69
+        },
+        "recovery": false,
+        "reopened_before_cut": false,
+        "environment": {
+          "scene": "baseline",
+          "plant": "broad",
+          "tilt_degrees": 10.0,
+          "azimuth_degrees": 180.0,
+          "geometry": "stem_segment_v1",
+          "background_collision": false,
+          "teacher": "waypoint_v2",
+          "observation_schema": "state30_v2"
+        },
+        "episode_id": 222,
+        "condition_id": 4,
+        "split": "train"
+      },
+      {
+        "seed": 60287,
+        "ood": false,
+        "target_id": 2,
+        "success": false,
+        "target_cut": false,
+        "wrong_cuts": 0,
+        "protected_intrusions": 0,
+        "tool_terrain_contact": false,
+        "returned": false,
+        "steps": 180,
+        "sim_seconds": 9.0,
+        "action_clips": 0,
+        "events": [],
+        "target_xyz": [
+          0.5352287622775557,
+          0.11324937079616434,
+          0.16392242531311105
+        ],
+        "outcome": "timeout",
+        "phases": {
+          "approach": 98,
+          "detour": 82
+        },
+        "recovery": false,
+        "reopened_before_cut": false,
+        "environment": {
+          "scene": "baseline",
+          "plant": "broad",
+          "tilt_degrees": 20.0,
+          "azimuth_degrees": 90.0,
+          "geometry": "stem_segment_v1",
+          "background_collision": false,
+          "teacher": "waypoint_v2",
+          "observation_schema": "state30_v2"
+        },
+        "episode_id": 287,
+        "condition_id": 5,
+        "split": "train"
+      },
+      {
+        "seed": 60434,
+        "ood": false,
+        "target_id": 2,
+        "success": false,
+        "target_cut": true,
+        "wrong_cuts": 0,
+        "protected_intrusions": 0,
+        "tool_terrain_contact": false,
+        "returned": false,
+        "steps": 180,
+        "sim_seconds": 9.0,
+        "action_clips": 0,
+        "events": [
+          {
+            "time_s": 3.755999999999808,
+            "plant": 2,
+            "target": true,
+            "height_error_m": 0.0009978666009025656,
+            "intersection_xyz": [
+              0.5787283753775849,
+              0.10357693447055838,
+              0.16910618703499913
+            ],
+            "seam_distance_m": 0.0010619265015964225
+          }
+        ],
+        "target_xyz": [
+          0.5790915756318625,
+          0.1035769344705584,
+          0.16810830253763198
+        ],
+        "outcome": "timeout",
+        "phases": {
+          "detour": 12,
+          "approach": 62,
+          "close": 2,
+          "retreat": 104
+        },
+        "recovery": false,
+        "reopened_before_cut": false,
+        "environment": {
+          "scene": "baseline",
+          "plant": "tall",
+          "tilt_degrees": 20.0,
+          "azimuth_degrees": 180.0,
+          "geometry": "stem_segment_v1",
+          "background_collision": false,
+          "teacher": "waypoint_v2",
+          "observation_schema": "state30_v2"
+        },
+        "episode_id": 434,
+        "condition_id": 8,
+        "split": "validation"
+      },
+      {
+        "seed": 60442,
+        "ood": false,
+        "target_id": 2,
+        "success": false,
+        "target_cut": false,
+        "wrong_cuts": 0,
+        "protected_intrusions": 0,
+        "tool_terrain_contact": false,
+        "returned": true,
+        "steps": 180,
+        "sim_seconds": 9.0,
+        "action_clips": 0,
+        "events": [],
+        "target_xyz": [
+          0.5271158838556417,
+          0.0962723049339995,
+          0.1355181961149961
+        ],
+        "outcome": "no_safe_route",
+        "phases": {
+          "blocked_route": 180
+        },
+        "recovery": false,
+        "reopened_before_cut": false,
+        "environment": {
+          "scene": "baseline",
+          "plant": "tall",
+          "tilt_degrees": 20.0,
+          "azimuth_degrees": 180.0,
+          "geometry": "stem_segment_v1",
+          "background_collision": false,
+          "teacher": "waypoint_v2",
+          "observation_schema": "state30_v2"
+        },
+        "episode_id": 442,
+        "condition_id": 8,
+        "split": "train"
+      }
+    ],
+    "validation": {
+      "dataset_sha256": "64f6835f89d611cfb9bb18fa538e963f3e271b79c9deeac76c4c97a3afc32d12",
+      "observation_schema": "state30_v2",
+      "frames": 53824,
+      "accepted_episodes": 445,
+      "train_episodes": 356,
+      "validation_episodes": 89,
+      "train_frames": 43269,
+      "validation_frames": 10555,
+      "recovery_episodes": 89,
+      "recovery_train": 71,
+      "recovery_validation": 18,
+      "conditions": [
+        {
+          "condition_id": 0,
+          "accepted": 50,
+          "train": 40,
+          "validation": 10,
+          "target_counts": {
+            "0": 19,
+            "2": 14,
+            "1": 17
+          }
+        },
+        {
+          "condition_id": 1,
+          "accepted": 50,
+          "train": 40,
+          "validation": 10,
+          "target_counts": {
+            "1": 22,
+            "2": 14,
+            "0": 14
+          }
+        },
+        {
+          "condition_id": 2,
+          "accepted": 49,
+          "train": 39,
+          "validation": 10,
+          "target_counts": {
+            "2": 13,
+            "0": 16,
+            "1": 20
+          }
+        },
+        {
+          "condition_id": 3,
+          "accepted": 50,
+          "train": 40,
+          "validation": 10,
+          "target_counts": {
+            "2": 12,
+            "0": 14,
+            "1": 24
+          }
+        },
+        {
+          "condition_id": 4,
+          "accepted": 49,
+          "train": 39,
+          "validation": 10,
+          "target_counts": {
+            "1": 12,
+            "0": 23,
+            "2": 14
+          }
+        },
+        {
+          "condition_id": 5,
+          "accepted": 49,
+          "train": 39,
+          "validation": 10,
+          "target_counts": {
+            "0": 16,
+            "2": 14,
+            "1": 19
+          }
+        },
+        {
+          "condition_id": 6,
+          "accepted": 50,
+          "train": 40,
+          "validation": 10,
+          "target_counts": {
+            "2": 18,
+            "1": 11,
+            "0": 21
+          }
+        },
+        {
+          "condition_id": 7,
+          "accepted": 50,
+          "train": 40,
+          "validation": 10,
+          "target_counts": {
+            "0": 12,
+            "2": 21,
+            "1": 17
+          }
+        },
+        {
+          "condition_id": 8,
+          "accepted": 48,
+          "train": 39,
+          "validation": 9,
+          "target_counts": {
+            "1": 12,
+            "2": 17,
+            "0": 19
+          }
+        }
+      ],
+      "checks": "checksum, schema, finite values, action bounds, episode continuity, transitions, successful-only, disjoint seed split, closed-start recovery"
+    },
+    "validator_sha256": "451cec7ef40213eb53ca755595175a186c03a70e213e819aa90a4d5664001409"
+  },
+  "legacy_bc_regression": {
+    "count": 30,
+    "success_count": 29,
+    "all_episode_records_equal": true,
+    "checkpoint_sha256": "1f99b5f1cf7d0c4813112b5b6993271c6c8cc8da8e698628bdedee9b4cea1355"
+  }
+}

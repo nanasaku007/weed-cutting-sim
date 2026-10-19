@@ -6,17 +6,18 @@ import time
 import mujoco.viewer
 import numpy as np
 
-from environment import CuttingEnv, DT
-from run import TreeBC
+from environment import DT
+from run import TreeBC, environment_options, make_env
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
+    environment_options(p)
     p.add_argument("--policy", choices=["manual", "expert", "bc"], default="bc")
     p.add_argument("--checkpoint", default="outputs/bc_v2.npz")
     p.add_argument("--seed", type=int, default=20000)
     args = p.parse_args()
-    env = CuttingEnv(max_steps=10000 if args.policy == "manual" else 180)
+    env = make_env(args, max_steps=10000 if args.policy == "manual" else 180)
     policy = TreeBC(args.checkpoint) if args.policy == "bc" else None
     commands = deque()
     obs = env.reset(args.seed)
