@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-25",
+  "status": "fixed_before_training_and_final_evaluation",
+  "dataset": "outputs/stage3/demos_state30_v1.npz",
+  "dataset_sha256": "64f6835f89d611cfb9bb18fa538e963f3e271b79c9deeac76c4c97a3afc32d12",
+  "split": "dataset validation_episode_ids; 356 train / 89 validation episodes",
+  "checkpoint": "outputs/stage4/bc_state30_v1.npz",
+  "training_seed": 42,
+  "model": {
+    "n_estimators": 48,
+    "max_depth": 22,
+    "min_samples_leaf": 2,
+    "n_jobs": 2
+  },
+  "model_selection": "one predeclared baseline; no tuning on final evaluation",
+  "iid_seeds": [
+    70000,
+    70029
+  ],
+  "recovery_seeds": [
+    71000,
+    71029
+  ],
+  "episodes_per_condition": 30,
+  "conditions": "3 shapes x 0/10/20 degrees; azimuth (i%4)*90; same 30 layouts reused across 9 conditions",
+  "policies": [
+    "waypoint_v2",
+    "bc_state30_v1"
+  ],
+  "geometry": "stem_segment_v1",
+  "observation_schema": "state30_v2",
+  "max_steps": 180,
+  "simulation_seconds_limit": 9,
+  "scene": "baseline",
+  "seed_audit": {
+    "json_files_scanned": 92,
+    "distinct_recorded_seeds": 855,
+    "overlap": []
+  },
+  "legacy_checkpoint": {
+    "path": "outputs/bc_v2.npz",
+    "backup": "outputs/stage4/archive/bc_v2.npz",
+    "sha256": "1f99b5f1cf7d0c4813112b5b6993271c6c8cc8da8e698628bdedee9b4cea1355"
+  }
+}

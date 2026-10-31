@@ -6,6 +6,8 @@ Pandaアームに固定した鋏で、3本の茎から指定された1本を切�
 
 ## 現在地と今後の方針
 
+- [最新のBC評価・失敗分析](STAGE4_RESULTS.md)（2026-10-25）：30次元BCは通常243/270（90.0%）、回復229/270（84.8%）。同条件の教師はどちらも267/270（98.9%）。各270件は30配置を9条件で再利用した延べ件数です。
+- 提出用の105秒動画と3ページのPDFレポートをローカルに作成済みです。動画は同じ学習済みBCの成功3例・失敗1例と全体評価・限界を示します。動画・PDFはこのリポジトリには含めていません。
 - [次セッションへの引き継ぎ](HANDOFF.md)：順番3までの到達点、ローカル成果物、次のBC再学習・評価の手順。
 - [評価結果](RESULTS.md)：通常条件29/30成功、位置・高さを広げた条件16/30成功。
 - [開発方針](ROADMAP.md)：道路・河川を模した背景、植物形状、傾き、撮影構成の拡張計画。
@@ -163,7 +165,7 @@ python run.py evaluate --policy expert --scene tree --plant broad --tilt 20 --ge
 
 ## 次の実験
 
-順番3の教師改善とデモ収集を実装しました。次は順番4のBC再学習・閉ループ評価です。新しい30次元入力は旧checkpointと混在できません。教師の成功率がそのままBCの成功率になるわけではないため、モデル学習後に別途評価します。
+順番4の30次元BC再学習と、別seedによる条件別の閉ループ評価まで実施しました。結果・失敗分析は [STAGE4_RESULTS.md](STAGE4_RESULTS.md) を参照してください。新しい30次元入力は旧checkpointと混在できません。教師とBCの成功率は分けて報告します。
 
 ## 改善した教師と新データ（順番3）
 
@@ -191,11 +193,25 @@ python run.py evaluate --policy expert --teacher waypoint_v2 --observation-schem
 
 新データには `observation_schema`、`condition_id`、`recovery`、事前に決めた `validation_episode_ids` が入ります。`run.py train` はそのsplitを使用し、新checkpointにも観測版を保存します。旧checkpointは15次元として読み込み、違う次元の入力を与えるとエラーにします。旧データや旧モデルは上書きしません。
 
-次の順番4で使う学習コマンドは以下です。この段階では実際のBC再学習はまだ行っていません。
+## BC再学習と条件別評価（順番4）
+
+既存データを再検証し、保存済みの356/89軌道splitで学習しました。学習設定と評価seedの事前固定記録は [experiments/stage4_protocol.json](experiments/stage4_protocol.json)、集計・hash・全失敗seedは [experiments/stage4_summary.json](experiments/stage4_summary.json) にあります。
+
+以下は未生成の出力先での再現用です。既存成果物を残す場合は別のディレクトリへ出力してください。`stage4.py` は既存の評価JSONへの上書きを拒否します。`run.py train` には上書き防止がないため、既存checkpointのパスへ再実行しないでください。
 
 ```bash
-python run.py train --data outputs/stage3/demos_state30_v1.npz --out outputs/stage4/bc_state30_v1.npz
+python validate_demos.py outputs/stage3/demos_state30_v1.npz --out outputs/stage3/dataset_validation_stage4.json
+python run.py train --data outputs/stage3/demos_state30_v1.npz --out outputs/stage4/bc_state30_v1.npz --seed 42
+python stage4.py --checkpoint outputs/stage4/bc_state30_v1.npz --seed 70000 --episodes 30 --out outputs/stage4/evaluation_iid.json
+python stage4.py --checkpoint outputs/stage4/bc_state30_v1.npz --seed 71000 --episodes 30 --recovery --out outputs/stage4/evaluation_recovery.json
+python stage4_report.py --root outputs/stage4 --out experiments/stage4_summary.json
 ```
+
+`stage4.py` は3形状×3傾斜、方位0/90/180/270度を循環し、`waypoint_v2` 教師とBCを同じseed・開始条件で比較します。回復開始は `stage3.initialize` と共通、最大180 step（9秒）、背景baseline、茎全体の判定です。BCの行動は `TreeBC.predict` だけで決め、教師の経路修正は挟みません。結果JSONには明示的な `policy`、checkpoint hash、ソースhash、完了フラグを保存します。
+
+成功・誤切断・侵入・地面接触・時間切れ・所要時間を条件別に出し、失敗軌道の観測、行動、次観測、関節指令、IK誤差を `evaluation_*_failures/` のNPZに保存します。`stage4_report.py` は完了済みの両評価、データ、split、checkpoint、旧モデルの保存、実行ソースを確認してから集計します。旧モデルは `outputs/bc_v2.npz` に残し、`outputs/stage4/archive/` にも控えを保存しました。
+
+70000・71000番台は今回の評価で使用済みです。これらの失敗を使って調整する次の実験では開発用とし、最終評価には未使用seedを新しく確保します。
 
 今回評価した51000・52000番台を今後モデルの選択・調整に使う場合、それらは開発用として扱い、改善を結論づける最終評価には新しいseedを確保してください。具体的な実装順序と動画構成は [ROADMAP.md](ROADMAP.md) を参照してください。
 
